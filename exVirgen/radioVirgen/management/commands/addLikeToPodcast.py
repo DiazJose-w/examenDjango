@@ -53,12 +53,11 @@ class Command(BaseCommand):
                             podcast=pd
                         )
                         self.stdout.write(self.style.SUCCESS('Like añadido'))
-
             else:
-                likeUser = LikePodcast.objects.filter(usuario=idUse)
+                likeUser = LikePodcast.objects.filter(id=idUse)
                 if likeUser.exists():
                     for like in likeUser:
-                        self.stdout.write(self.style.SUCCESS(f'{like}'))
+                        self.stdout.write(self.style.SUCCESS(f'{like.usuario} le gusta el podcast: {like.podcast}'))
                 else:
                     self.stdout.write(self.style.WARNING(f'El usuario con id {idUse} no existe'))
 

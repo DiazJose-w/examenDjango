@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models import ForeignKey
+from pandas.io.formats.info import frame_see_also_sub
+
 
 class Programa(models.Model):
     nombre = models.CharField(max_length=80, unique=True)
@@ -55,6 +58,21 @@ class Usuario(models.Model):
     def __str__(self):
         return f'Nombre: {self.nombre}\n Nick: {self.nick}'
 
+class MetodoPago(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='MetodoUsuario')
+    tipo = models.CharField(max_length=50)
+    nombreCompleto = models.CharField(max_length=100, null= True)
+    email = models.CharField(max_length=50, null= False)
+    numeroCuenta = models.IntegerField(null=False, blank=False, unique=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(tipo__in=["Tarjeta", "PayPal", "Transferencia"]),
+                name="check_tipo_values"
+            )
+        ]
+
 class Reproduccion(models.Model):
     usuario= models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='usuarioReproduccion')
     podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE, related_name='podcastReproduccion')
@@ -83,3 +101,16 @@ class LikePodcast(models.Model):
 
     def __str__(self):
         return f'Usuario {self.usuario} podcast {self.podcast}'
+
+
+
+
+
+
+
+
+
+
+
+
+
